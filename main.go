@@ -2,11 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/getlantern/systray"
+
 	"github.com/go-vgo/robotgo"
 	hook "github.com/robotn/gohook"
-	"log"
-	"os"
+
 	"time"
 )
 
@@ -19,30 +18,33 @@ func main() {
 	altPressed := false
 
 	keyMap := map[uint16]string{
-		16: "7", // Q
-		17: "8", // W
-		30: "4", // A
-		31: "5", // S
-		44: "1", // Z
-		45: "2", // X
+		16: "num7", // Q
+		17: "num8", // W
+		30: "num4", // A
+		31: "num5", // S
+		44: "num1", // Z
+		45: "num2", // X
 	}
 
 	for ev := range events {
 		switch ev.Kind {
 		case hook.KeyDown:
 			if ev.Keycode == 56 {
-
 				altPressed = true
 				continue
 			}
 
 			if altPressed {
+
 				if numpadKey, ok := keyMap[ev.Keycode]; ok {
-					err := robotgo.KeyTap(numpadKey, "numpad")
-					if err != nil {
-						return
-					}
+					robotgo.KeyToggle("alt", "up")
+					robotgo.KeyTap(numpadKey)
+					//fmt.Println("Keypad:", numpadKey)
+					//fmt.Println("KeyCode:", ev.Keycode)
+					robotgo.KeyToggle("alt", "down")
+
 				}
+
 			}
 
 			if ev.Keycode == 73 {
